@@ -18,6 +18,7 @@ jobs:
       matrix:
         # NOTE: the "latest" variant is identified in the Docker meta step's 'latest' config
         variant:
+          - java21-graalvm
           - java20
           - java20-alpine
           - java20-graalvm
@@ -35,6 +36,11 @@ jobs:
           - java11-openj9
           - java11-jdk
         include:
+        # JAVA 21:
+          - variant: java21-graalvm
+            baseImage: ghcr.io/graalvm/jdk-community:21
+            platforms: linux/amd64,linux/arm64
+            mcVersion: 1.20.1
         # JAVA 20:
           - variant: java20
             baseImage: eclipse-temurin:20-jre
