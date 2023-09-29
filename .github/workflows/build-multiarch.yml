@@ -39,7 +39,7 @@ jobs:
         include:
         # JAVA 21:
           - variant: java21-graalvm
-            baseImage: ghcr.io/graalvm/jdk-community:21
+            baseImage: ghcr.io/graalvm/jdk-community:21-ol8
             platforms: linux/amd64,linux/arm64
             mcVersion: 1.20.1
         # JAVA 20:
