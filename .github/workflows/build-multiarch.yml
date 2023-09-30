@@ -193,6 +193,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ github.token }}
+        continue-on-error: true
 
       - name: Build and push
         uses: docker/build-push-action@v5.0.0
