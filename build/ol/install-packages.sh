@@ -9,6 +9,10 @@ set -euo pipefail
 
 if [[ "$VERSION_ID" == 9* ]]
 then
+microdnf install -y dnf
+dnf install 'dnf-command(config-manager)' -y
+dnf config-manager --enable ol9_codeready_builder
+
 tee /etc/yum.repos.d/ol9-epel.repo<<EOF
 [ol9_developer_EPEL]
 name= Oracle Linux \$releasever EPEL (\$basearch)
@@ -19,6 +23,9 @@ enabled=1
 EOF
 elif [[ "$VERSION_ID" == 8* ]]
 then
+microdnf install -y dnf
+dnf install 'dnf-command(config-manager)' -y
+dnf config-manager --enable ol8_codeready_builder
 tee /etc/yum.repos.d/ol8-epel.repo<<EOF
 [ol8_developer_EPEL]
 name= Oracle Linux \$releasever EPEL (\$basearch)
@@ -38,9 +45,9 @@ else
   echo "Unsupported OL version: $VERSION_ID"
   exit 1
 fi
-microdnf update -y
+dnf update -y
 
-microdnf install -y \
+dnf install -y \
   ImageMagick \
   file \
   sudo \
