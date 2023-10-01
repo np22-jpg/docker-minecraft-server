@@ -40,7 +40,7 @@ else
 fi
 microdnf update -y
 
-microdnf install -y --setopt=install_weak_deps=0 \
+microdnf install -y \
   ImageMagick \
   file \
   sudo \
