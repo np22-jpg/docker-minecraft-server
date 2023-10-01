@@ -4,10 +4,21 @@ export TARGET
 
 set -euo pipefail
 
-microdnf install dnf -y
+# shellcheck source=/etc/os-release
+. /etc/os-release
 
-dnf install 'dnf-command(config-manager)' -y
-dnf config-manager --set-enabled ol8_codeready_builder
+if [[ "$VERSION_ID" == 9* ]]
+then
+tee /etc/yum.repos.d/ol9-epel.repo<<EOF
+[ol9_developer_EPEL]
+name= Oracle Linux \$releasever EPEL (\$basearch)
+baseurl=https://yum.oracle.com/repo/OracleLinux/OL9/developer/EPEL/\$basearch/
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-oracle
+gpgcheck=1
+enabled=1
+EOF
+elif [[ "$VERSION_ID" == 8* ]]
+then
 tee /etc/yum.repos.d/ol8-epel.repo<<EOF
 [ol8_developer_EPEL]
 name= Oracle Linux \$releasever EPEL (\$basearch)
@@ -15,10 +26,22 @@ baseurl=https://yum.oracle.com/repo/OracleLinux/OL8/developer/EPEL/\$basearch/
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-oracle
 gpgcheck=1
 enabled=1
-EOF
-dnf update -y
 
-dnf install -y ImageMagick \
+[ol8_codeready_builder]
+name=Oracle Linux 8 CodeReady Builder (\$basearch) - Unsupported
+baseurl=https://yum.oracle.com/repo/OracleLinux/OL8/codeready/builder/\$basearch/
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-oracle
+gpgcheck=1
+enabled=1
+EOF
+else 
+  echo "Unsupported OL version: $VERSION_ID"
+  exit 1
+fi
+microdnf update -y
+
+microdnf install -y --setopt=install_weak_deps=0 \
+  ImageMagick \
   file \
   sudo \
   net-tools \
